@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trang chủ</title>
+    <style>
+        /* CSS cho thanh điều hướng (nav) */
+        nav {
+            background-color: #4267B2;
+            color: black;
+            padding: 15px 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: black;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 100px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 10px;
+        }
+
+        .profile-dropdown:hover .profile-dropdown-content {
+            display: block;
+        }
+
+        .profile-dropdown-content a {
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .profile-dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        /* CSS cho phần thông tin người dùng và liên kết đăng nhập */
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .greeting {
+            margin-right: 20px;
+            font-weight: bold;
+        }
+
+        .auth-links a {
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+
+        /* CSS cho tiêu đề và danh sách khóa học */
+       body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding-top: 60px;
+        }
+
+        h1, h2, h3 {
+            font-weight: bold;
+            color: #333;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .course-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .course-section {
+            flex: 0 0 calc(33.33% - 20px); /* 33.33% cho 3 khóa học trên một hàng */
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 10px; /* Khoảng cách bên trái và bên phải */
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-button {
+            background-color: #4267B2;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .lesson-button:hover {
+            background-color: #3a5a99;
+        }
+
+        /* CSS cho footer */
+        footer {
+            background-color: #4267B2;
+            color: black;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <a href="{% url 'home' %}">Trang chủ</a>
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                <div class="profile-dropdown">
+                    <span class="greeting">Xin chào, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}">Đăng xuất</a>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}">Đăng nhập</a>
+                <a href="{% url 'signup' %}">Đăng ký</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+{% if user.is_authenticated %}
+    <h1>Chào mừng tới Nghia English Course</h1>
+    <h2>Danh sách khóa học</h2>
+    <div class="course-container">
+        {% for course in courses %}
+            <section class="course-section">
+                <h3>{{ course.title }}</h3>
+                <p>Teacher: {{ course.instructor }}</p>
+                <p>Description: {{ course.description }}</p>
+                <div class="enroll-button">
+                    <a href="{% url 'course_lessons' course.id %}" onclick="goToLesson('{{ course.id }}')" class="lesson-button">Xem khóa học</a>
+                </div>
+            </section>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="advertisement">
+        <div class="container">
+            <h2>Học tiếng Anh với chúng tôi!</h2>
+            <p>Bạn muốn nâng cao khả năng tiếng Anh? Hãy tham gia vào trang web học tiếng Anh của chúng tôi để khám phá hàng loạt khóa học hấp dẫn và nâng cao kỹ năng của bạn.</p>
+            <a class="btn btn-primary" href="/signup/">Bắt đầu học ngay</a>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    function goToLesson(courseId) {
+        window.location.href = "{% url 'course_lessons' 0 %}".replace("0", courseId);
+    }
+</script>
+
+<div style="height: 100px;"></div>
+<footer>
+    <h2>Liên hệ chúng tôi</h2>
+    <p>Email: phamnghiadhqb@gmail.com</p>
+</footer>
+</body>
+</html>

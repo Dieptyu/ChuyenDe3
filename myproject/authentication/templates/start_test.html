@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ test.title }}</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #0074D9;
+            font-size: 28px;
+        }
+
+        .timer {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .info {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        #quiz-form {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 2px solid #0074D9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        fieldset {
+            border: none;
+            padding: 10px 0;
+        }
+
+        legend {
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+        }
+
+        input[type="radio"] {
+            margin: 5px;
+        }
+
+        .submit-button {
+            background-color: #0074D9;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ test.title }}</h1>
+    <p class="timer">Thời gian còn lại: <span id="timer">--:--</span></p>
+    <p class="info">Start Time: {{ test.start_time }}</p>
+    <form method="post" action="{% url 'submit_test' test.id %}" id="quiz-form">
+        {% csrf_token %}
+        {% for question in questions %}
+            <fieldset>
+                <legend>{{ question.text }}</legend>
+                <label><input type="radio" name="question_{{ question.id }}" value="1"> {{ question.choice_1 }}</label>
+                <label><input type="radio" name="question_{{ question.id }}" value="2"> {{ question.choice_2 }}</label>
+                <label><input type="radio" name="question_{{ question.id }}" value="3"> {{ question.choice_3 }}</label>
+                <label><input type="radio" name="question_{{ question.id }}" value="4"> {{ question.choice_4 }}</label>
+            </fieldset>
+        {% endfor %}
+        <input type="submit" class="submit-button" value="Nộp bài">
+    </form>
+
+    <script>
+function updateTimer(startTime, endTime) {
+    var timerElement = document.getElementById("timer");
+
+    function update() {
+        var now = new Date();
+        if (now < startTime) {
+            // Bài kiểm tra chưa bắt đầu
+            var timeRemaining = new Date(startTime - now);
+            var message = "Bài kiểm tra sẽ bắt đầu sau: ";
+        } else if (now > endTime) {
+            // Bài kiểm tra đã kết thúc
+            clearInterval(interval);
+            timerElement.textContent = "Hết giờ!";
+            return;
+        } else {
+            // Bài kiểm tra đang diễn ra
+            var timeRemaining = new Date(endTime - now);
+            var message = "Time Left: ";
+        }
+
+        var minutes = Math.floor(timeRemaining / 60000);
+        var seconds = Math.floor((timeRemaining % 60000) / 1000);
+
+        // Format thời gian
+        var formattedMinutes = minutes.toString().padStart(2, '0');
+        var formattedSeconds = seconds.toString().padStart(2, '0');
+
+        timerElement.textContent = message + formattedMinutes + ":" + formattedSeconds;
+    }
+
+    update(); // Gọi lần đầu để hiển thị thời gian ban đầu
+    var interval = setInterval(update, 1000); // Cập nhật thời gian mỗi giây
+}
+
+// Lấy thời gian bắt đầu và kết thúc từ model Django
+var startTimeString = "{{ test.start_time|date:'Y-m-d H:i:s' }}";
+var endTimeString = "{{ test.end_time|date:'Y-m-d H:i:s' }}";
+var startTime = new Date(startTimeString);
+var endTime = new Date(endTimeString);
+
+updateTimer(startTime, endTime);
+    </script>
+</body>
+</html>

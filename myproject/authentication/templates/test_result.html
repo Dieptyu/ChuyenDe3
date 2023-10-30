@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kết quả bài kiểm tra</title>
+    <style>
+        /* CSS cho phần tiêu đề */
+        h1 {
+            color: #333;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        /* CSS cho phần thông tin bài kiểm tra */
+        p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* CSS cho nút "Lùi về trang trước đó" */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0074D9;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer; /* Biến con trỏ thành dấu tay khi di chuột vào nút */
+        }
+    </style>
+</head>
+<body>
+    <h1>Kết quả bài kiểm tra</h1>
+    <p>Bài kiểm tra: {{ test.title }}</p>
+    <p>Số câu trả lời đúng: {{ score }}</p> <!-- Hiển thị điểm số -->
+    <!-- Thêm nút "Lùi về trang trước đó" -->
+    <button class="button" onclick="window.history.back();">Lùi về trang trước</button>
+</body>
+</html>

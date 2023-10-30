@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ course.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative; /* Đặt body làm tham chiếu cho vị trí tuyệt đối */
+        }
+
+        h1 {
+            margin: 10px;
+        }
+
+        p {
+            margin: 10px;
+        }
+
+        h2 {
+            margin: 10px;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            margin: 10px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .lesson-item {
+            width: 300px; /* Độ rộng của phần bài kiểm tra */
+            float: left; /* Đặt phần tử ở bên trái */
+            clear: both; /* Đảm bảo không có phần tử khác nằm cùng hàng */
+        }
+
+        .submit-button {
+            position: absolute; /* Đặt vị trí tuyệt đối */
+            left: 10px; /* Khoảng cách từ mép trái */
+            bottom: 10px; /* Khoảng cách từ mép dưới */
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ course.title }}</h1>
+    <p>Người dạy: {{ course.instructor }}</p>
+    <h2>Bài học:</h2>
+    <ul>
+        {% for lesson in lessons %}
+            <li class="lesson-item">
+                <a href="{% url 'lesson_detail' lesson.id %}"><strong>{{ lesson.title }}</strong></a><br>
+                Lý thuyết:<br>
+                {{ lesson.content }}
+                <br><br>
+                <strong>Bài kiểm tra:</strong> {{ lesson.title }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Nút "Làm bài kiểm tra" -->
+    <a class="submit-button" href="{% url 'take_quiz' course.id %}">Làm bài kiểm tra</a>
+</body>
+</html>
